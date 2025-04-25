@@ -1,0 +1,59 @@
+[#assign
+    readOnly = input.attributes.readOnly?? && input.attributes.readOnly
+    layout = configuration.layout?default("horizontal")
+]
+<div class="radio-button-field">
+    <label
+        class="[#if !input.showLabel || !input.label?has_content]sr-only[/#if]"
+        id="${fragmentEntryLinkNamespace}-radio-button-group-label"
+    >
+        ${htmlUtil.escape(input.label)}
+        [#if readOnly](${languageUtil.get(locale, "read-only")})[#elseif input.required][@clay["icon"] className="reference-mark" symbol="asterisk" /][/#if]
+    </label>
+    <div class="radio-button-group [#if layout == 'horizontal']layout-horizontal[#elseif layout == 'vertical']layout-vertical[/#if]">
+        [#if readOnly]
+            <p class="form-control-static">
+                ${input.attributes.selectedOptionLabel?default("")}
+                [#if input.value?has_content]
+                    <input type="hidden" name="${input.name}" value="${input.value}">
+                [/#if]
+            </p>
+        [#else]
+            [#assign options=(input.attributes.options)![]]
+            [#list options as option]
+                <div class="form-check">
+                    <input
+                        class="form-check-input"
+                        type="radio"
+                        name="${input.name}"
+                        id="${fragmentEntryLinkNamespace}-option-${option.value}"
+                        value="${option.value}"
+                        ${input.required?then('required', '')}
+                        [#if input.value?? && option.value == input.value]checked[/#if]
+                        aria-labelledby="${fragmentEntryLinkNamespace}-radio-button-group-label ${fragmentEntryLinkNamespace}-option-label-${option.value}"
+                    >
+                    <label
+                        class="form-check-label"
+                        for="${fragmentEntryLinkNamespace}-option-${option.value}"
+                        id="${fragmentEntryLinkNamespace}-option-label-${option.value}"
+                    >
+                        ${htmlUtil.escape(option.label)}
+                    </label>
+                </div>
+            [/#list]
+        [/#if]
+        [#if input.errorMessage?has_content]
+            <p class="font-weight-semi-bold mt-1 text-danger" id="${fragmentEntryLinkNamespace}-error-message">
+                <svg class="lexicon-icon lexicon-icon-info-circle" focusable="false" role="presentation">
+                    <use xlink:href="${siteSpritemap}#info-circle" />
+                </svg>
+                <span>${input.errorMessage}</span>
+            </p>
+        [/#if]
+        [#if input.showHelpText && input.helpText?has_content]
+            <p class="mb-0 mt-1 text-secondary" id="${fragmentEntryLinkNamespace}-help-text">
+                ${input.helpText}
+            </p>
+        [/#if]
+    </div>
+</div>

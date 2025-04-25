@@ -1,0 +1,27 @@
+{
+  "fieldSets": [
+    {
+      "fields": [
+        {
+          "name": "layout",
+          "label": "Orientation",
+          "type": "select",
+          "dataType": "string",
+          "typeOptions": {
+            "validValues": [
+              {
+                "value": "horizontal",
+                "label": "Horizontal"
+              },
+              {
+                "value": "vertical",
+                "label": "Vertical"
+              }
+            ]
+          },
+          "defaultValue": "horizontal"
+        }
+      ]
+    }
+  ]
+}
