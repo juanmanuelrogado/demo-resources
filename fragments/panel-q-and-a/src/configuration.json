@@ -1,0 +1,14 @@
+{
+  "fieldSets": [
+    {
+      "fields": [
+        {
+          "name": "panelColor",
+          "label": "Panel Color",
+          "type": "colorPicker",
+          "defaultValue": "#EEF4FF"
+        }
+      ]
+    }
+  ]
+}

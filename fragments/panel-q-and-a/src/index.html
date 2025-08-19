@@ -1,0 +1,26 @@
+[#assign
+timestamp = .now?long
+/]
+
+<div class="fragment-panel panel panel-secondary" style="--panel-color: ${configuration.panelColor};">
+	<button aria-controls="collapsablePanel-${timestamp}" aria-expanded="false"
+		class="btn btn-unstyled panel-header panel-header-link collapse-icon collapse-icon-middle collapsed"
+		data-target="#collapsablePanel-${timestamp}" data-toggle="liferay-collapse">
+			<span class="panel-icon">[@clay["icon"] symbol="check-circle-full" /]</span>
+			<span class="panel-title">
+				<span data-lfr-editable-id="faq-question" data-lfr-editable-type="text"></span>
+			</span>
+		<span class="collapse-icon-closed">
+			[@clay["icon"] symbol="angle-right" /]
+		</span>
+		<span class="collapse-icon-open">
+			[@clay["icon"] symbol="angle-down" /]
+		</span>
+	</button>
+
+	<div class="collapse panel-collapse" id="collapsablePanel-${timestamp}" role="region">
+		<div class="panel-body">
+			<span data-lfr-editable-id="faq-answer" data-lfr-editable-type="text"></span>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,22 @@
+.fragment-panel {
+	background-color: var(--panel-color, #ffffff);
+}
+
+.fragment-panel span.panel-icon {
+	color: var(--color-action-primary-default, #0960FF);
+	margin-right: 1rem;
+	font-size: 1rem;
+}
+
+.fragment-panel span.panel-title span {
+	text-transform: none !important;
+	font-weight: var(--font-weight-semi-bold, 600);
+	color: var(--color-neutral-10, #101010);
+	font-size: var(--h5-font-size, 1.125rem);
+}
+
+.fragment-panel .panel-body {
+	color:  var(--color-neutral-8, #474747);
+	font-weight: var(--font-weight-light, 300);
+	font-size: var(--text-paragraph-sm-font-size, 0.8125rem);
+}
