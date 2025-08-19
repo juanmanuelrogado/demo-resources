@@ -1,5 +1,4 @@
-# Radio Button Select
+# Panel Q & A
 
-Fragment to be used in a **Form Container** to show a *picklist* field as a **radio button**, instead of a select.
-
-The orientation is configurable [horizontal, vertical].
+Fragment to show collapsible Clay panels. Useful to show FAQs or Q&A sections.
+Mappable, and meant to be used with collections.
