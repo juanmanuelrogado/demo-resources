@@ -1,0 +1,12 @@
+assemble:
+    - from: build/static
+      into: static
+bookings-custom-element:
+    htmlElementName: bookings-custom-element
+    instanceable: false
+    name: Booking Custom Element
+    portletCategoryName: category.client-extensions
+    type: customElement
+    urls:
+        - index.*.js
+    useESM: true
