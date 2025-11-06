@@ -1,0 +1,32 @@
+<div class="suggested-search d-flex align-items-center flex-wrap">
+	<h4 class="pl-2 pr-3 mb-0" data-lfr-editable-id="suggested-search-text" data-lfr-editable-type="text">Suggested search</h4>
+	[#if configuration.suggestedSearch1?? && configuration.suggestedSearch1?has_content]
+	<button class="badge badge-info pr-2">
+		<span class="badge-item badge-item-expand p-2">${configuration.suggestedSearch1}</span>
+	</button>
+	[/#if]
+	
+	[#if configuration.suggestedSearch2?? && configuration.suggestedSearch2?has_content]
+	<button class="badge badge-info pr-2">
+		<span class="badge-item badge-item-expand p-2">${configuration.suggestedSearch2}</span>
+	</button>
+	[/#if]
+	
+	[#if configuration.suggestedSearch3?? && configuration.suggestedSearch3?has_content]
+	<button class="badge badge-info pr-2">
+		<span class="badge-item badge-item-expand p-2">${configuration.suggestedSearch3}</span>
+	</button>
+	[/#if]
+	
+	[#if configuration.suggestedSearch4?? && configuration.suggestedSearch4?has_content]
+	<button class="badge badge-info pr-2">
+		<span class="badge-item badge-item-expand p-2">${configuration.suggestedSearch4}</span>
+	</button>
+	[/#if]
+	
+	[#if configuration.suggestedSearch5?? && configuration.suggestedSearch5?has_content]
+	<button class="badge badge-info pr-2">
+		<span class="badge-item badge-item-expand p-2">${configuration.suggestedSearch5}</span>
+	</button>
+	[/#if]
+</div>

@@ -1,0 +1,73 @@
+{
+  "fieldSets": [
+    {
+      "fields": [
+        {
+          "name": "searchPage",
+          "label": "Search Page",
+          "type": "text",
+          "typeOptions": {
+            "placeholder": "Search Page"
+          },
+          "dataType": "string",
+					"defaultValue": "search"
+				},
+				{
+          "name": "suggestedSearch1",
+          "label": "Suggested Search 1",
+          "type": "text",
+					"localizable": true,
+          "typeOptions": {
+            "placeholder": "Enter first suggestion"
+          },
+          "dataType": "string",
+          "defaultValue": "Taxes"
+        },
+        {
+          "name": "suggestedSearch2",
+          "label": "Suggested Search 2",
+          "type": "text",
+					"localizable": true,
+          "typeOptions": {
+            "placeholder": "Enter second suggestion"
+          },
+          "dataType": "string",
+          "defaultValue": "Air Quality"
+        },
+        {
+          "name": "suggestedSearch3",
+          "label": "Suggested Search 3",
+          "type": "text",
+					"localizable": true,
+          "typeOptions": {
+            "placeholder": "Enter third suggestion"
+          },
+          "dataType": "string",
+          "defaultValue": "Recycling"
+        },
+        {
+          "name": "suggestedSearch4",
+          "label": "Suggested Search 4",
+          "type": "text",
+					"localizable": true,
+          "typeOptions": {
+            "placeholder": "Enter fourth suggestion"
+          },
+          "dataType": "string",
+          "defaultValue": "Events"
+        },
+        {
+          "name": "suggestedSearch5",
+          "label": "Suggested Search 5",
+          "type": "text",
+					"localizable": true,
+          "typeOptions": {
+            "placeholder": "Enter fifth suggestion"
+          },
+          "dataType": "string",
+          "defaultValue": "Parking"
+        }
+      ]
+    }
+  ]
+}
