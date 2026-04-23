@@ -1,0 +1,35 @@
+<style>
+  .chatbot-container {
+    --chat-window-bg: ${configuration.chatWindowBgColor};
+    --user-message-bg: ${configuration.userMessageBgColor};
+    --user-message-font: ${configuration.userMessageFontColor};
+    --bot-message-bg: ${configuration.botMessageBgColor};
+    --bot-message-font: ${configuration.botMessageFontColor};
+    --chat-header-bg: ${configuration.chatHeaderBgColor};
+    --chat-header-font: ${configuration.chatHeaderFontColor};
+    --chat-button-bg: ${configuration.chatButtonBgColor};
+    --chat-button-font: ${configuration.chatButtonFontColor};
+	}
+  .chat-launcher{  
+    --launcher-bg: ${configuration.launcherBgColor};
+    --launcher-icon-color: ${configuration.launcherIconColor};  
+    --launcher-icon-size: ${configuration.launcherIconSize}px; 
+  }
+</style>
+
+<div class="chat-launcher" aria-label="Open chat">
+  [@clay["icon"] symbol="${configuration.launcherIconName}" /]
+</div>
+
+<div class="chatbot-container">
+    <div class="chat-header">
+        <span>Do you need help?</span>
+        <button class="chat-close-button" aria-label="Close chat">&times;</button>
+    </div>
+    <div class="chat-messages">
+    </div>
+    <form class="chat-input-form">
+        <input type="text" class="chat-input" placeholder="Ask me something..." required>
+        <button type="submit" class="chat-send-button">Send</button>
+    </form>
+</div>

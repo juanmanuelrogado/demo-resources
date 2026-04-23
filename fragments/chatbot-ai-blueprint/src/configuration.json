@@ -1,0 +1,129 @@
+{
+  "fieldSets": [
+		{
+      "label": "Chat Behavior",
+      "fields": [
+        {
+          "name": "botThinkingDelay",
+          "label": "Bot Thinking Delay (ms)",
+          "description": "The delay in milliseconds before the bot's reply appears (e.g., 1000 = 1 second).",
+          "type": "text",
+          "dataType": "int",
+          "defaultValue": "500"
+        }
+      ]
+    },
+		{
+      "label": "Chat Colors",
+      "fields": [
+        {
+          "name": "chatWindowBgColor", "label": "Chat Window Background",
+          "type": "colorPicker", "defaultValue": "#FFFFFF"
+        },
+        {
+          "name": "userMessageBgColor", "label": "User Message Background",
+          "type": "colorPicker", "defaultValue": "#D1EAF9"
+        },
+        {
+          "name": "userMessageFontColor", "label": "User Message Font Color",
+          "type": "colorPicker", "defaultValue": "#000000"
+        },
+        {
+          "name": "botMessageBgColor", "label": "Bot Message Background",
+          "type": "colorPicker", "defaultValue": "#F1F1F1"
+        },
+        {
+          "name": "botMessageFontColor", "label": "Bot Message Font Color",
+          "type": "colorPicker", "defaultValue": "#000000"
+        },
+        {
+          "name": "chatHeaderBgColor", "label": "Chat Header Background",
+          "type": "colorPicker", "defaultValue": "#007BFF"
+        },
+        {
+          "name": "chatHeaderFontColor", "label": "Chat Header Font Color",
+          "type": "colorPicker", "defaultValue": "#FFFFFF"
+        },
+        {
+          "name": "chatButtonBgColor", "label": "Chat Button Background",
+          "type": "colorPicker", "defaultValue": "#007BFF"
+        },
+        {
+          "name": "chatButtonFontColor", "label": "Chat Button Font Color",
+          "type": "colorPicker", "defaultValue": "#FFFFFF"
+        }
+      ]
+    },
+    {
+      "label": "Launcher Button",
+      "fields": [
+        {
+          "name": "launcherBgColor",
+          "label": "Launcher Background Color",
+          "description": "The background color of the floating chat launcher button.",
+          "type": "colorPicker",
+          "defaultValue": "#007BFF"
+        },
+        {
+          "name": "launcherIconColor",
+          "label": "Launcher Icon Color",
+          "description": "The color of the icon inside the launcher button.",
+          "type": "colorPicker",
+          "defaultValue": "#FFFFFF"
+        },
+        {
+          "name": "launcherIconName",
+          "label": "Launcher Icon Name",
+          "description": "Enter a Clay icon name (e.g., 'chat', 'message', 'user').",
+          "type": "text",
+          "defaultValue": "chat"
+        },
+        {
+          "name": "launcherIconSize",
+          "label": "Launcher Icon Size (in px)",
+          "description": "Enter a number for the icon's size (e.g., '24').",
+          "type": "text",
+          "defaultValue": "24"
+        }
+      ]
+    },
+    {
+      "label": "Service Connection",
+      "fields": [
+        {
+          "dataType": "string",
+          "defaultValue": "",
+          "label": "Blueprint External Reference Code (optional)",
+          "name": "blueprintExternalReferenceCode",
+          "type": "text"
+        },
+        {
+          "dataType": "string",
+          "defaultValue": "",
+          "label": "Site Id (optional)",
+          "name": "searchScope",
+          "type": "text"
+        },
+        {
+          "dataType": "string",
+          "defaultValue": "",
+          "label": "User Agent ERC",
+          "name": "userAgentERC",
+          "type": "text"
+        },
+        {
+          "dataType": "string",
+          "defaultValue": "http",
+          "label": "Protocol",
+          "name": "protocol",
+          "type": "text"
+        },
+        {
+          "name": "serviceHostname", "label": "Service Hostname",
+          "type": "text", "defaultValue": "localhost"
+        },
+        { "name": "servicePort", "label": "Service Port", "type": "text", "defaultValue": "9090" }
+      ]
+    }
+  ]
+}

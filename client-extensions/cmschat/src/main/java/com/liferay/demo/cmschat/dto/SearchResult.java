@@ -33,6 +33,7 @@ public class SearchResult {
 		PAGE("Page"),
 		CMS2_Press_Release("Press Release"),
 		USER("User"),
+		PRODUCT("Product"),
 		OTHER("Other");
 
 		private final String title;

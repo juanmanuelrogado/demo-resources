@@ -1,0 +1,230 @@
+.chatbot-container {
+    /* Fixed position for a corner popup */
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 350px; /* Example size */
+    height: 450px; /* Example size */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    background-color: #f7f7f7; /* Light background for the whole chat box */
+    z-index: 1000;
+    
+    /* --- MODIFIED: Hide by default for transition --- */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px) scale(0.95);
+    transition: all 0.3s ease-in-out;
+}
+
+.chat-header {
+    background-color: var(--color-brand-primary,#3f51b5); /* Primary color for header */
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-weight: bold;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    
+    /* --- MODIFIED: Use flex to position close button --- */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-messages {
+    /* This is your scrollable area */
+    flex-grow: 1; 
+    overflow-y: auto;
+    padding: 10px;
+}
+
+/* --- Message Styling (RESTORED) --- */
+
+.message {
+    /* Basic styling for all messages */
+    max-width: 80%; /* Messages won't take up the full width */
+    margin-bottom: 1em; /* Margin between messages */
+    padding: 1em; /* Padding inside the message bubble */
+    border-radius: 20px; /* Rounded corners */
+    line-height: 1.4;
+    word-wrap: break-word; /* Ensure long words break */
+}
+
+.user-message {
+    /* User messages on the right */
+    background-color: #3f51b5; /* Blue background */
+    color: white; /* White text for contrast */
+    margin-left: auto; /* Pushes the message to the right */
+    margin-right: 0;
+}
+
+.bot-message {
+    /* Bot messages on the left */
+    background-color: #e0e0e0; /* A lighter background for the bot */
+    color: #333;
+    margin-right: auto; /* Keeps the message on the left */
+    margin-left: 0;
+}
+
+/* --- Input Area Styling --- */
+
+.chat-input-form {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+}
+
+.chat-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    margin-right: 5px;
+}
+
+.chat-send-button {
+    background-color: #3f51b5;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.chat-send-button:hover {
+    background-color: #303f9f;
+}
+
+/* --- NEW: Styles for Launcher and Toggle Logic --- */
+
+.chat-launcher {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 1001; /* Higher than the chat window */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Transition for show/hide */
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+    transition: all 0.3s ease-in-out;
+}
+
+.chat-launcher:hover {
+    background-color: #303f9f;
+    transform: scale(1.1); /* Nice hover effect */
+}
+
+.chat-close-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0 5px;
+    line-height: 1;
+}
+
+/* --- NEW: This is the core toggle logic --- */
+
+/* When chat is open, show the window */
+body.chat-is-open .chatbot-container {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
+
+/* When chat is open, hide the launcher */
+body.chat-is-open .chat-launcher {
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.5);
+}
+/*
+ * NEW: Bot Typing Indicator
+ * Add this inside your <style> tag
+ */
+.chatbot-container .message.bot-message.typing-indicator {
+  background-color: var(--bot-message-bg);
+  color: var(--bot-message-font);
+  padding: 10px 12px;
+  display: inline-block; /* Make it fit the content */
+}
+
+.chatbot-container .typing-indicator span {
+  animation-name: bounce;
+  animation-duration: 1.4s;
+  animation-iteration-count: infinite;
+  animation-fill-mode: both;
+  height: 6px;
+  width: 6px;
+  background-color: var(--bot-message-font);
+  border-radius: 50%;
+  display: inline-block;
+  margin: 0 1px;
+}
+
+.chatbot-container .typing-indicator span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.chatbot-container .typing-indicator span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+  0%, 80%, 100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}
+
+.chatbot-container .chat-messages {
+    background-color: var(--chat-window-bg);
+  }
+  
+  .chatbot-container .message.user-message {
+    background-color: var(--user-message-bg);
+    color: var(--user-message-font);
+  }
+  
+  .chatbot-container .message.bot-message {
+    background-color: var(--bot-message-bg);
+    color: var(--bot-message-font);
+  }
+  
+  .chatbot-container .chat-header {
+    background-color: var(--chat-header-bg);
+    color: var(--chat-header-font);
+  }
+  
+  .chatbot-container .chat-input-form button {
+    background-color: var(--chat-button-bg);
+    color: var(--chat-button-font);
+  }
+  .chat-launcher .lexicon-icon{
+    color: var(--launcher-icon-color);
+    font-size: var(--launcher-icon-size);
+    width: var(--launcher-icon-size);
+    height: var(--launcher-icon-size);
+  }
+  .chat-launcher {
+    background-color: var(--launcher-bg);
+    color: var(--launcher-icon-color); /* Fallback for icon color */   
+  }

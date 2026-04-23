@@ -43,8 +43,16 @@ public class LiferayHttpRequestFactoryImpl implements LiferayHttpRequestFactory 
 	public HttpRequest newLiferayGetRequest(String apiPath, String authToken) throws IOException {
 
 		try {
-			return HttpRequest.newBuilder().uri(new URI(liferayHeadlessApiBaseURL + apiPath)).setHeader("Authorization",
-					"Bearer " + authToken).setHeader("Content-Type", "application/json").GET().build();
+			HttpRequest.Builder builder = HttpRequest.newBuilder()
+				.uri(new URI(liferayHeadlessApiBaseURL + apiPath))
+				.setHeader("Content-Type", "application/json")
+				.GET();
+
+			if (authToken != null && !authToken.isEmpty()) {
+				builder.setHeader("Authorization", "Bearer " + authToken);
+			}
+
+			return builder.build();
 		}
 		catch (URISyntaxException uriSyntaxException) {
 			uriSyntaxException.printStackTrace();
@@ -75,8 +83,16 @@ public class LiferayHttpRequestFactoryImpl implements LiferayHttpRequestFactory 
 			String queryString = paramBuilder.build(ParamBuilder.Type.FORM_URLENCODED);
 			URI uri = new URI(liferayHeadlessApiBaseURL + apiPath + "?" + queryString);
 
-			return HttpRequest.newBuilder().uri(uri).setHeader("Authorization", "Bearer " + authToken).setHeader(
-					"Content-Type", "application/json").POST(bodyPublisher).build();
+			HttpRequest.Builder builder = HttpRequest.newBuilder()
+				.uri(uri)
+				.setHeader("Content-Type", "application/json")
+				.POST(bodyPublisher);
+
+			if (authToken != null && !authToken.isEmpty()) {
+				builder.setHeader("Authorization", "Bearer " + authToken);
+			}
+
+			return builder.build();
 		}
 		catch (URISyntaxException uriSyntaxException) {
 			uriSyntaxException.printStackTrace();

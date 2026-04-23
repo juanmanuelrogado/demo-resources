@@ -121,7 +121,7 @@ public class ChatController {
 		paramsBuilder.addMessage(ChatCompletionMessageParam.ofChatCompletionSystemMessageParam(
 				ChatCompletionSystemMessageParam.builder().role(ChatCompletionSystemMessageParam.Role.SYSTEM).content(
 					ChatCompletionSystemMessageParam.Content.ofTextContent(
-						"You are an assistant that incorporates the title, description, and text content provided within user messages into responses. The responses should also contain hyperlinked titles using download URLs provided within user messages."))
+						"You are an assistant that incorporates the title, description, and text content provided within user messages into responses. The responses should also contain hyperlinked titles using download URLs provided within user messages.  Always use in your response the same language as the user questions."))
 					.build()));
 
 		for (int i = 0; i < messages.size(); i++) {

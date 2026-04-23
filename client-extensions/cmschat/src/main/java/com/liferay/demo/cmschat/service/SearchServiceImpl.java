@@ -79,6 +79,12 @@ public class SearchServiceImpl implements SearchService {
 	@Value("${cms2.display.page.base.url}")
 	private String _cms2DisplayPageBaseURL;
 
+	@Value("${sites.commerce-site}")
+	private String liferayCommerceSiteURL;
+
+	@Value("${sites.main-site}")
+	private String liferayMainSiteURL;
+
 	private static String _downloadText(Jwt jwt, String url, int maxChars) throws IOException {
 
 		System.err.println("!@#$ _downloadText url=" + url);
@@ -87,7 +93,9 @@ public class SearchServiceImpl implements SearchService {
 		HttpHeaders headers = new HttpHeaders();
 
 		// Bearer token authentication
-		headers.setBearerAuth(jwt.getTokenValue());
+		if (jwt != null) {
+			headers.setBearerAuth(jwt.getTokenValue());
+		}
 
 		// Build Basic Auth header manually
 		// String auth = "test@liferay.com:test";
@@ -166,9 +174,11 @@ public class SearchServiceImpl implements SearchService {
 
 		boolean limitToFirstResult = keywords.toLowerCase().startsWith("summarize the");
 
+		String authToken = (jwt != null) ? jwt.getTokenValue() : null;
+
 		return _getSearchResults(jwt,
 				_httpResponseFactory.getHttpResponseBody(
-					_liferayHttpRequestFactory.newLiferayGetRequest(url, jwt.getTokenValue())
+					_liferayHttpRequestFactory.newLiferayGetRequest(url, authToken)
 						), limitToFirstResult);
 	}
 
@@ -289,7 +299,7 @@ public class SearchServiceImpl implements SearchService {
 
 						System.err.println("embeddedJsonNode.path('siteId').asInt()=" + embeddedJsonNode.path("siteId").asInt());
 
-						relativeContentURL = "/web/guest/w/" + embeddedJsonNode.path("friendlyUrlPath").asText();
+						relativeContentURL = liferayMainSiteURL + "/w/" + embeddedJsonNode.path("friendlyUrlPath").asText();
 						contentURL = _relative2AbsoluteURL(itemURL, relativeContentURL);
 					}
 
@@ -301,7 +311,7 @@ public class SearchServiceImpl implements SearchService {
 					String rawHtml = embeddedJsonNode.path("articleBody").asText();
 					String text = _html2Text(rawHtml);
 					contentText = text.length() > remainingChars ? text.substring(0, remainingChars) : text;
-					relativeContentURL = "/web/guest/b/" + embeddedJsonNode.path("friendlyUrlPath").asText();
+					relativeContentURL = liferayMainSiteURL + "/b/" + embeddedJsonNode.path("friendlyUrlPath").asText();
 					contentURL = _relative2AbsoluteURL(itemURL, relativeContentURL);
 
 					break;
@@ -398,6 +408,32 @@ public class SearchServiceImpl implements SearchService {
 						System.err.println("!@#$ embeddedJsonNode.get('file') is null");
 					}
 
+					break;
+				}
+
+				case PRODUCT: {
+					addSearchResult = true;
+
+					StringBuilder sb = new StringBuilder();
+					// Get categories of the product
+					JsonNode categories = embeddedJsonNode.path("categories");
+					if (categories.isArray()) {						
+						for (int i = 0; i < categories.size(); i++) {
+							JsonNode category = categories.get(i);
+							sb.append(category.path("name").asText());
+							sb.append("\n");
+						}
+					}
+					// Get short description
+					JsonNode shortDesc = embeddedJsonNode.path("shortDescription");
+					sb.append(shortDesc.path("en_US").asText());
+					sb.append("\n");
+
+
+					JsonNode urls = embeddedJsonNode.path("urls");
+					contentText = sb.toString();
+					relativeContentURL = liferayCommerceSiteURL + "/p/" + urls.path("en_US").asText();
+					contentURL = _relative2AbsoluteURL(itemURL, relativeContentURL);
 					break;
 				}
 
