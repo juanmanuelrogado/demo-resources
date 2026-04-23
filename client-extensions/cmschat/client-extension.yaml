@@ -1,0 +1,10 @@
+assemble:
+    -   fromTask: bootJar
+liferay-cmschat-oauth-application-user-agent:
+    .serviceAddress: localhost:58081
+    .serviceScheme: http
+    name: CMS Chat OAuth Application User Agent
+    scopes:
+        -   Liferay.Portal.Search.REST.everything
+        -   Liferay.Search.Experiences.REST.everything
+    type: oAuthApplicationUserAgent
