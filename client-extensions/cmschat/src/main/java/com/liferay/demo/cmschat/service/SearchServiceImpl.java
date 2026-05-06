@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.net.URLEncoder;
 
 import org.apache.tika.Tika;
 import org.apache.tika.exception.TikaException;
@@ -154,6 +155,24 @@ public class SearchServiceImpl implements SearchService {
 
 	@Override
 	public List<SearchResult> getSearchResults(Jwt jwt, String keywords, String blueprintExternalReferenceCode, String scope) throws IOException {
+		Map<String, String> urlParameters = new HashMap<>();
+		urlParameters.put("nestedFields", URLEncoder.encode("embedded", "UTF-8"));
+		urlParameters.put("search", URLEncoder.encode(keywords, "UTF-8"));
+		System.err.println("-----------------------");
+		System.err.println("keywords=" + keywords);
+
+		boolean limitToFirstResult = keywords.toLowerCase().startsWith("summarize the");
+
+		String authToken = (jwt != null) ? jwt.getTokenValue() : null;
+
+		return _getSearchResults(jwt,
+				_httpResponseFactory.getHttpResponseBody(
+					_liferayHttpRequestFactory.newLiferayPostRequest("/search/v1.0/search", authToken,
+						urlParameters)), limitToFirstResult);
+	}
+
+	//@Override
+	public List<SearchResult> bak_getSearchResults(Jwt jwt, String keywords, String blueprintExternalReferenceCode, String scope) throws IOException {
 		Map<String, String> urlParameters = new HashMap<>();
 
 		System.err.println("-----------------------");
