@@ -1,0 +1,216 @@
+<?xml version="1.0"?>
+
+<workflow-definition
+	xmlns="urn:liferay.com:liferay-workflow_7.4.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:liferay.com:liferay-workflow_7.4.0 http://www.liferay.com/dtd/liferay-workflow-definition_7_4_0.xsd"
+>
+	<name>3ab7cf36-bf23-1f6b-2b4f-ed96b503c12b</name>
+	<version>55</version>
+	<http-request>
+		<name>fdb15d66-0a50-4280-a82f-3973c8288ff9</name>
+		<description>Make outbound calls to REST APIs or client extensions.</description>
+		<metadata>
+			<![CDATA[
+				{
+					"xy": [
+						272.27546310424805,
+						124.75846862792969
+					]
+				}
+			]]>
+		</metadata>
+		<labels>
+			<label language-id="en_US">
+				Create Press Release
+			</label>
+		</labels>
+		<http-method>POST</http-method>
+		<input-variables>
+			<![CDATA[
+[
+	{
+		"name": "payload",
+		"type": "string"
+	}
+]
+]]>
+		</input-variables>
+		<output-variables>
+			<![CDATA[
+[
+	{
+		"name": "output",
+		"type": "string"
+	}
+]
+]]>
+		</output-variables>
+		<request-body>
+			<![CDATA[{{payload}}
+]]>
+		</request-body>
+		<timeout>10000</timeout>
+		<transitions>
+			<transition>
+				<labels>
+					<label language-id="en_US">
+						Transition Label
+					</label>
+				</labels>
+				<name>846341e5-d1e7-41d1-97af-5784d1d0ed1c</name>
+				<target>end</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+		<url>https://webserver-lctdemoibaihub-prd.lfr.cloud/o/c/pressreleases/scopes/Knowledge%20Base</url>
+	</http-request>
+	<llm>
+		<name>24109543-ff60-4279-8650-28e12c0b1f15</name>
+		<description>Generate content, summarize and classify data using LLM models.</description>
+		<metadata>
+			<![CDATA[
+				{
+					"xy": [
+						251.7536169421661,
+						-61.11472085512458
+					]
+				}
+			]]>
+		</metadata>
+		<labels>
+			<label language-id="en_US">
+				Extract data from input
+			</label>
+		</labels>
+		<input-variables>
+			<![CDATA[
+[
+	{
+		"name": "text",
+		"type": "string"
+	}
+]
+]]>
+		</input-variables>
+		<output-variables>
+			<![CDATA[
+[
+	{
+		"name": "payload",
+		"type": "string"
+	}
+]
+]]>
+		</output-variables>
+		<prompt>
+			<![CDATA[You are a content editing and analysis assistant for Liferay CMS.
+
+Your goal is to analyze the text of the provided press release and extract the required fields, generating only a valid JSON object to be used by a subsequent HTTP POST request.
+
+PRESS RELEASE:
+---
+{{text}}
+---
+
+FIELDS TO EXTRACT:
+- "agency": Name of the agency or media outlet issuing the news (e.g., "EFE," "Europa Press," "Reuters").
+- "date": Publication date in YYYY-MM-DD format (or the textual date if it cannot be normalized).
+- "link": Original URL or link to the news story extracted from the text. If none exists, assign an empty string "".
+- "title": Main headline of the news story (concise, without additional quotation marks, and a maximum of 200 characters).
+- "summary": A 1- or 2-sentence summary of the news story’s key points. This is already included in the text of the press release.
+- "content": The complete and detailed content of the news story formatted with semantic HTML tags (<p>, <strong>, <ul>, <li>). Exclude header metadata and contact information at the end.
+- "keywords": Extract keywords from the title, summary, and content. Four or five keywords. Each must consist of a single word. Avoid multi-word compound keywords.
+
+HARDCODED FIELDS
+- "objectEntryFolderId": fixed. ID: 40431
+- "status.code": 0 (approved).
+
+STRICT JSON FORMAT RULES:
+1. Return ONLY the JSON object without Markdown code blocks (use of ``` or ```json is prohibited), and without introductory text or explanations.
+2. The entire JSON object must be generated as a single line of continuous text, without literal line breaks (LF/CR) within string values.
+3. If you include double quotes within the text or HTML tags, you must escape them with a backslash (\).
+
+EXPECTED OUTPUT SCHEMA:
+{"objectEntryFolderId":"40431", ‘title’: "my title", "content": "my content", "date": "my date", "summary": "my summary", "agency": "my agency", "link": "my link", "keywords": ["...","...","..."], ‘status’:{"code":0}}
+]]>
+		</prompt>
+		<rag>
+			<![CDATA[
+{}
+]]>
+		</rag>
+		<tools>
+			<![CDATA[
+[]
+]]>
+		</tools>
+		<transitions>
+			<transition>
+				<labels>
+					<label language-id="en_US">
+						Transition Label
+					</label>
+				</labels>
+				<name>a5c632d0-7ab7-4524-949d-99f2e0ab51c0</name>
+				<target>fdb15d66-0a50-4280-a82f-3973c8288ff9</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+		<user-message>
+			<![CDATA[text: {{text}}
+]]>
+		</user-message>
+	</llm>
+	<state>
+		<name>start</name>
+		<description>Begin a workflow.</description>
+		<metadata>
+			<![CDATA[
+				{
+					"xy": [
+						272.00000973079267,
+						-225.44226983788198
+					]
+				}
+			]]>
+		</metadata>
+		<initial>true</initial>
+		<labels>
+			<label language-id="en_US">
+				Start
+			</label>
+		</labels>
+		<transitions>
+			<transition>
+				<labels>
+					<label language-id="en_US">
+						Transition Label
+					</label>
+				</labels>
+				<name>a16e9dc2-6427-4661-8fcd-7cc05b29e5f1</name>
+				<target>24109543-ff60-4279-8650-28e12c0b1f15</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+	</state>
+	<state>
+		<name>end</name>
+		<metadata>
+			<![CDATA[
+				{
+					"xy": [
+						273,
+						300
+					],
+					"terminal": true
+				}
+			]]>
+		</metadata>
+		<labels>
+			<label language-id="en_US">
+				End
+			</label>
+		</labels>
+	</state>
+</workflow-definition>
