@@ -18,8 +18,8 @@ The solution automates the ingestion, text extraction, segmentation, and semanti
 ┌────────────────────────────────────────────────────────────────────────┐
 │ Client Extension Microservice (aihubobjectaction)                      │
 │                                                                        │
-│  1. Webhook Handler       Receives event, returns HTTP 200, spawns bg   │
-│  2. CMS Ingestion         Fetches document binary via Headless CMS API  │
+│  1. Webhook Handler       Receives event, returns HTTP 200, spawns bg  │
+│  2. CMS Ingestion         Fetches document binary via Headless CMS API │
 │  3. Text Extractor        Extracts plain text with pypdf               │
 │  4. Segmenter             Splits multi-article documents on delimiters │
 │  5. Text Sanitizer        Normalizes text to safe, single-line format  │
@@ -31,8 +31,8 @@ The solution automates the ingestion, text extraction, segmentation, and semanti
 ┌────────────────────────────────────────────────────────────────────────┐
 │ Liferay AI Hub (Agent: JMR_AGENT_PRESS_RELEASES)                       │
 │                                                                        │
-│  • Node 1 (LLM Inference): Extracts title, content, summary, metadata │
-│  • Node 2 (HTTP Request):  POST to Liferay Headless Object API        │
+│  • Node 1 (LLM Inference): Extracts title, content, summary, metadata  │
+│  • Node 2 (HTTP Request):  POST to Liferay Headless Object API         │
 └────────────────────────────────────┬───────────────────────────────────┘
                                      │
                                      │ POST /o/c/pressreleases/scopes/{scopeKey}
@@ -140,3 +140,13 @@ Configuration is managed dynamically via environment variables:
 | `LIFERAY_VERIFY_SSL` | `False` | Enables or disables SSL certificate verification |
 | `AIHUB_AGENT_ERC` | `JMR_AGENT_PRESS_RELEASES` | External Reference Code of the target AI Hub Agent |
 | `AIHUB_SERVICE_URL` | `https://ai.hub.liferay.com` | Base URL of the Liferay AI Hub SaaS cluster |
+
+---
+
+## 6. Integration and Configuration Resources (`resources/`)
+
+The client extension project includes a `resources/` directory containing assets and definitions required to configure the integration environment:
+
+* **Object Definition for Press Releases (`Object_Definition_PressRelease_*.json`)**: Complete Liferay Object definition JSON ready for import via Object Admin, defining the fields (`title`, `content` Rich Text, `summary`, `date`, `agency`, `link`) and storage scopes.
+* **AI Hub Agent Workflow (`agent_workflow.xml`)**: Workflow definition for the `JMR_AGENT_PRESS_RELEASES` agent orchestration in AI Hub, linking the LLM extraction node to the automated HTTP POST execution node.
+* **LLM Step Prompt (`prompt_llm.txt`)**: Production prompt template configuring the Google Gemini model to extract structured attributes into strict single-line JSON format.
