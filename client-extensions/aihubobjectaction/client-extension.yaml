@@ -1,0 +1,22 @@
+assemble:
+    -   from: src
+        into: src
+    -   include: requirements.txt
+
+aihubobjectactionoauth:
+    .serviceAddress: localhost:8081
+    .serviceScheme: http
+    name: AIHub Object Action OAuth
+    scopes:
+        - Liferay.Headless.Object.everything
+        - Liferay.Headless.Delivery.everything
+        - cmsbasicdocument.everything
+        - Liferay.Headless.Admin.User.everything
+        - Liferay.AI.Hub.Cell.REST.everything
+    type: oAuthApplicationUserAgent
+
+aihubobjectaction:
+    name: AIHub PressReleases Object Action
+    oAuth2ApplicationExternalReferenceCode: aihubobjectactionoauth
+    resourcePath: /object/action/trigger-agent
+    type: objectAction
