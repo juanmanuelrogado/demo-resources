@@ -54,15 +54,21 @@ The solution automates the ingestion, text extraction, segmentation, and semanti
 ### 2.2. Object Action Client Extension (`aihubobjectaction`)
 A Python Flask microservice packaged as a Liferay Client Extension running in Liferay Cloud / Kubernetes:
 
+> **Architectural Rationale for In-Service PDF & Base64 Extraction:**
+> Binary Base64 decoding and PDF plain-text extraction are handled directly inside this Client Extension due to current architectural limitations in Liferay AI Hub:
+> 1. AI Hub agents cannot accept raw binary files or document attachments as input context.
+> 2. AI Hub does not currently provide native tools or nodes for extracting plain text from binary files (e.g., PDFs).
+> Consequently, the microservice acts as an essential bridging layer, decoding the binary asset from CMS and extracting clean text in memory before dispatching tasks to AI Hub.
+
 * **Webhook Receiver (`/object/action/trigger-agent`)**:
   * Validates the incoming payload and extracts the document primary key.
   * Validates the dynamic OAuth 2.0 bearer token injected by Liferay.
   * Immediately returns HTTP 200 to acknowledge the webhook, offloading the processing pipeline to a background worker thread.
-* **CMS Document Client**:
-  * Calls `GET /o/cms/basic-documents/{id}?nestedFields=file.fileBase64,file.fileURL` using the authorization token.
-  * Retrieves the binary payload via Base64 or relative download link.
+* **CMS Document Client & Base64 Decoder**:
+  * Queries `GET /o/cms/basic-documents/{id}?nestedFields=file.fileBase64,file.fileURL` using the OAuth authorization token.
+  * Parses and decodes the `file.fileBase64` binary content directly in memory (falling back to the `file.link.href` download URL if Base64 is absent), avoiding persistent disk overhead.
 * **PDF Extraction & Segmentation Engine**:
-  * Reads the binary stream in-memory with `pypdf` without writing to disk.
+  * Extracts plain text across all document pages from the in-memory binary stream using `pypdf`.
   * Scans text for explicit structural delimiter patterns (e.g. `===` or `---`) to isolate individual articles in compilations, or treats the entire document as a single press release.
 * **Text Sanitizer**:
   * Strips illegal control characters (`\n`, `\r`, `\t`) and collapses whitespace into a single continuous line.
