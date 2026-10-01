@@ -87,72 +87,46 @@ def extract_entry_id(payload):
 
 def format_press_release_for_llm(raw_text):
     """
-    Normalizes press release text into continuous semantic HTML strictly on a single line
-    (no literal '\n' or '\r' line breaks and no unescaped double quotes).
-    This ensures safe interpolation into JSON templates such as:
-    {"title": "...", "body": "{{text}}"}
+    Sanitizes raw text into a single continuous line for safe JSON template interpolation
+    (e.g., {"title": "...", "body": "{{text}}"}).
+    Replaces literal double quotes to avoid breaking JSON string tokens and eliminates
+    literal line breaks and control characters.
+    Semantic structuring (HTML formatting, metadata extraction) is delegated entirely to the LLM.
     """
     if not raw_text:
         return ""
 
-    # 1. Collapse all lines into a single text flow
+    # 1. Collapse lines and normalize whitespace
     lines = [l.strip() for l in raw_text.splitlines() if l.strip()]
     joined = " ".join(lines)
 
-    # 2. Replace double quotes with chevron quotation marks (« ») to avoid breaking JSON strings
+    # 2. Replace double quotes with typographical chevrons (« ») to prevent breaking JSON strings
     joined = re.sub(r'\"([^\"]*)\"', r'«\1»', joined)
     joined = joined.replace('\"', '«')
 
-    # 3. Structure metadata and headers with HTML tags
-    joined = re.sub(r'\s*((?:AGENCIA|AGENCY)\s*:\s*)', r'<p><strong>\1</strong> ', joined, flags=re.IGNORECASE)
-    joined = re.sub(r'\s*((?:FECHA|DATE)\s*:\s*)', r'</p><p><strong>\1</strong> ', joined, flags=re.IGNORECASE)
-    joined = re.sub(r'\s*((?:ENLACE|LINK|URL)\s*:\s*)', r'</p><p><strong>\1</strong> ', joined, flags=re.IGNORECASE)
-
-    # 4. Bullet points and lists
-    joined = re.sub(r'\s*((?:Aspectos destacados|Highlights)[^:]*:?)\s*●\s*', r'</p><p><strong>\1</strong></p><ul><li>', joined, flags=re.IGNORECASE)
-    joined = re.sub(r'\s*●\s*', r'</li><li>', joined)
-    if '<ul><li>' in joined and '</li></ul>' not in joined:
-        if re.search(r'(Contacto de prensa|Press contact)', joined, re.IGNORECASE):
-            joined = re.sub(r'\s*((?:Contacto de prensa|Press contact):?)', r'</li></ul><p><strong>\1</strong> ', joined, flags=re.IGNORECASE)
-        else:
-            joined += '</li></ul>'
-
-    # 5. Punctuation cleanup and removal of control characters
-    joined = re.sub(r'\s+([,.:;])', r'\1', joined)
+    # 3. Clean control characters, tabs, and duplicate spaces
     joined = joined.replace('\n', ' ').replace('\r', ' ').replace('\t', ' ')
     joined = re.sub(r' {2,}', ' ', joined).strip()
-
-    # Ensure enclosing tags
-    if not joined.endswith('</p>') and not joined.endswith('</ul>'):
-        joined += '</p>'
-    if not joined.startswith('<p>'):
-        joined = '<p>' + joined
 
     return joined
 
 def split_press_releases(full_text):
     """
-    Splits the document text into individual press releases.
-    Detects delimiters such as '===' separators or start patterns like 'AGENCIA:' / 'AGENCY:'.
+    Splits document text into individual press releases if explicit delimiters are present.
+    Supports structural separators (e.g. lines with '===' or '---').
+    Defaults to treating the entire document as a single press release.
     """
     if not full_text:
         return []
 
-    # 1. Explicit separators (e.g. lines of === or ---)
+    # 1. Explicit structural separators (e.g. lines of === or ---)
     if re.search(r'(?m)^[=\-]{3,}\s*$', full_text):
         chunks = re.split(r'(?m)^[=\-]{3,}\s*$', full_text)
         items = [c.strip() for c in chunks if c.strip()]
         if len(items) > 1:
             return items
 
-    # 2. Split by start pattern (AGENCIA: or AGENCY:)
-    if re.search(r'(?:AGENCIA|AGENCY)\s*:', full_text, flags=re.IGNORECASE):
-        chunks = re.split(r'(?=(?:^|\n)\s*(?:AGENCIA|AGENCY)\s*:)', full_text, flags=re.IGNORECASE)
-        items = [c.strip() for c in chunks if c.strip() and re.search(r'(?:AGENCIA|AGENCY)', c, re.IGNORECASE)]
-        if len(items) > 1:
-            return items
-
-    # 3. Fallback: entire document as a single press release
+    # 2. Default: entire document as a single press release
     return [full_text.strip()]
 
 def fetch_and_extract_pdf_text(entry_id, liferay_token, max_retries=10, retry_delay=2):

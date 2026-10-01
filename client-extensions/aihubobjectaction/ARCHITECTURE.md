@@ -21,8 +21,8 @@ The solution automates the ingestion, text extraction, segmentation, and semanti
 │  1. Webhook Handler       Receives event, returns HTTP 200, spawns bg   │
 │  2. CMS Ingestion         Fetches document binary via Headless CMS API  │
 │  3. Text Extractor        Extracts plain text with pypdf               │
-│  4. Segmenter             Splits document into individual articles     │
-│  5. Text Normalizer       Formats text to single-line semantic HTML    │
+│  4. Segmenter             Splits multi-article documents on delimiters │
+│  5. Text Sanitizer        Normalizes text to safe, single-line format  │
 │  6. AI Hub Dispatcher     Obtains tokens & triggers agent instances    │
 └────────────────────────────────────┬───────────────────────────────────┘
                                      │
@@ -63,10 +63,11 @@ A Python Flask microservice packaged as a Liferay Client Extension running in Li
   * Retrieves the binary payload via Base64 or relative download link.
 * **PDF Extraction & Segmentation Engine**:
   * Reads the binary stream in-memory with `pypdf` without writing to disk.
-  * Scans text for delimiter patterns (e.g. `===`, `---`) or agency headings (`AGENCIA:` / `AGENCY:`) to isolate individual articles.
-* **Semantic HTML Normalizer**:
-  * Converts article paragraphs and lists into semantic HTML (`<p>`, `<strong>`, `<ul>`, `<li>`).
-  * Replaces standard double quotes with typographical chevrons (`« »`) and removes literal line break control characters (`\n`, `\r`), producing a clean, single-line string for safe template interpolation.
+  * Scans text for explicit structural delimiter patterns (e.g. `===` or `---`) to isolate individual articles in compilations, or treats the entire document as a single press release.
+* **Text Sanitizer**:
+  * Strips illegal control characters (`\n`, `\r`, `\t`) and collapses whitespace into a single continuous line.
+  * Replaces standard double quotes with typographical chevrons (`« »`) to prevent breaking downstream JSON/Liquid template syntax.
+  * Delegates all semantic parsing, metadata extraction (`agency`, `date`, `link`), and HTML structuring directly to the LLM agent.
 * **AI Hub Client & SSE Stream Manager**:
   * Authenticates against `/o/ai-hub-cell/v1.0/authorization-tokens` to retrieve cell credentials (`accessToken`, `userToken`, and target cell URL).
   * Initiates an SSE handshake via `/o/ai-hub/v1.0/agent-instances/subscribe` to obtain the `sseEventSinkKey`.
